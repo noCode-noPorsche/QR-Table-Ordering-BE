@@ -11,6 +11,8 @@ import validatorCompilerPlugin from '@/plugins/validatorCompiler.plugins'
 import { errorHandlerPlugin } from '@/plugins/errorHandler.plugins'
 import testRoutes from '@/routes/test.route'
 import { hashPassword } from '@/utils/crypto'
+import accountRoutes from '@/routes/account.route'
+import { initOwnerAccount } from '@/controllers/account.controller'
 
 const fastify = Fastify({
   logger: false
@@ -47,12 +49,14 @@ const startServer = async () => {
     fastify.register(authRoutes, {
       prefix: '/auth'
     })
+    fastify.register(accountRoutes, {
+      prefix: '/accounts'
+    })
 
     fastify.register(testRoutes, {
       prefix: '/test'
     })
-
-    console.log(await hashPassword('123456'))
+    await initOwnerAccount()
     await fastify.listen({
       port: envConfig.PORT,
       host: envConfig.DOCKER ? '0.0.0.0' : 'localhost'
