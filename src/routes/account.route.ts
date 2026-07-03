@@ -69,7 +69,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
           page,
           limit
         },
-        message: 'Lấy danh sách nhân viên thành công'
+        message: 'Lấy danh sách nhân viên thành công!'
       })
     }
   )
@@ -91,7 +91,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       const account = await createEmployeeAccount(request.body)
       reply.send({
         data: account as AccountResType['data'],
-        message: 'Tạo tài khoản thành công'
+        message: 'Tạo tài khoản thành công!'
       })
     }
   )
@@ -111,7 +111,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       const account = await getEmployeeAccount(accountId)
       reply.send({
         data: account as AccountResType['data'],
-        message: 'Lấy thông tin nhân viên thành công'
+        message: 'Lấy thông tin nhân viên thành công!'
       })
     }
   )
@@ -137,7 +137,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       }
       reply.send({
         data: account as AccountResType['data'],
-        message: 'Cập nhật thành công'
+        message: 'Cập nhật thành công!'
       })
     }
   )
@@ -161,7 +161,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       }
       reply.send({
         data: account as AccountResType['data'],
-        message: 'Xóa thành công'
+        message: 'Xóa thành công!'
       })
     }
   )
@@ -179,7 +179,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       const account = await getMeController(request.decodedAccessToken?.userId as number)
       reply.send({
         data: account as AccountResType['data'],
-        message: 'Lấy thông tin thành công'
+        message: 'Lấy thông tin thành công!'
       })
     }
   )
@@ -202,7 +202,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       const result = await updateMeController(request.decodedAccessToken?.userId as number, request.body)
       reply.send({
         data: result as AccountResType['data'],
-        message: 'Cập nhật thông tin thành công'
+        message: 'Cập nhật thông tin thành công!'
       })
     }
   )
@@ -225,7 +225,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       const result = await changePasswordController(request.decodedAccessToken?.userId as number, request.body)
       reply.send({
         data: result as AccountResType['data'],
-        message: 'Đổi mật khẩu thành công'
+        message: 'Đổi mật khẩu thành công!'
       })
     }
   )
@@ -248,7 +248,7 @@ export default async function accountRoutes(fastify: FastifyInstance, options: F
       const result = await changePasswordV2Controller(request.decodedAccessToken?.userId as number, request.body)
       reply.send({
         data: result as ChangePasswordV2ResType['data'],
-        message: 'Đổi mật khẩu thành công'
+        message: 'Đổi mật khẩu thành công!'
       })
     }
   )

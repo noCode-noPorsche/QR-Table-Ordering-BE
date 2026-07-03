@@ -15,6 +15,7 @@ import accountRoutes from '@/routes/account.route'
 import { initOwnerAccount } from '@/controllers/account.controller'
 import mediaRoutes from '@/routes/media.route'
 import dishRoutes from '@/routes/dish.route'
+import tablesRoutes from '@/routes/table.route'
 
 const fastify = Fastify({
   logger: false
@@ -59,6 +60,9 @@ const startServer = async () => {
     })
     fastify.register(dishRoutes, {
       prefix: '/dishes'
+    })
+    fastify.register(tablesRoutes, {
+      prefix: '/tables'
     })
 
     fastify.register(testRoutes, {
