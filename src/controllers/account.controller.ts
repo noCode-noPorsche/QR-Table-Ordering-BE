@@ -90,6 +90,25 @@ export const getAccountList = async () => {
   return account
 }
 
+export const getAccountListWithPagination = async (page: number, limit: number) => {
+  const data = await prisma.account.findMany({
+    orderBy: {
+      createdAt: 'desc'
+    },
+    skip: (page - 1) * limit,
+    take: limit
+  })
+  const totalItem = await prisma.account.count()
+  const totalPage = Math.ceil(totalItem / limit)
+  return {
+    items: data,
+    totalItem,
+    page,
+    limit,
+    totalPage
+  }
+}
+
 export const updateEmployeeAccount = async (accountId: number, body: UpdateEmployeeAccountBodyType) => {
   try {
     const [socketRecord, oldAccount] = await Promise.all([

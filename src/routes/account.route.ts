@@ -5,7 +5,7 @@ import {
   createEmployeeAccount,
   createGuestController,
   deleteEmployeeAccount,
-  getAccountList,
+  getAccountListWithPagination,
   getEmployeeAccount,
   getGuestList,
   getMeController,
@@ -16,8 +16,6 @@ import { pauseApiHook, requireEmployeeHook, requireLoggedHook, requireOwnerHook 
 import {
   AccountIdParam,
   AccountIdParamType,
-  AccountListRes,
-  AccountListResType,
   AccountRes,
   AccountResType,
   ChangePasswordBody,
@@ -32,6 +30,10 @@ import {
   CreateGuestBodyType,
   CreateGuestRes,
   CreateGuestResType,
+  GetAccountListPaginationQuery,
+  GetAccountListPaginationQueryType,
+  GetAccountListPaginationRes,
+  GetAccountListPaginationResType,
   GetGuestListQueryParams,
   GetGuestListQueryParamsType,
   GetListGuestsRes,
@@ -45,20 +47,28 @@ import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export default async function accountRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.addHook('preValidation', fastify.auth([requireLoggedHook]))
-  fastify.get<{ Reply: AccountListResType }>(
+  fastify.get<{ Reply: GetAccountListPaginationResType; Querystring: GetAccountListPaginationQueryType }>(
     '/',
     {
       schema: {
         response: {
-          200: AccountListRes
-        }
+          200: GetAccountListPaginationRes
+        },
+        querystring: GetAccountListPaginationQuery
       },
       preValidation: fastify.auth([requireOwnerHook])
     },
     async (request, reply) => {
-      const accounts = await getAccountList()
+      const { page, limit } = request.query
+      const data = await getAccountListWithPagination(page, limit)
       reply.send({
-        data: accounts as AccountListResType['data'],
+        data: {
+          items: data.items as GetAccountListPaginationResType['data']['items'],
+          totalItem: data.totalItem,
+          totalPage: data.totalPage,
+          page,
+          limit
+        },
         message: 'Lấy danh sách nhân viên thành công'
       })
     }

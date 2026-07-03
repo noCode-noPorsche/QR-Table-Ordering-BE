@@ -14,6 +14,7 @@ import { hashPassword } from '@/utils/crypto'
 import accountRoutes from '@/routes/account.route'
 import { initOwnerAccount } from '@/controllers/account.controller'
 import mediaRoutes from '@/routes/media.route'
+import dishRoutes from '@/routes/dish.route'
 
 const fastify = Fastify({
   logger: false
@@ -55,6 +56,9 @@ const startServer = async () => {
     })
     fastify.register(mediaRoutes, {
       prefix: '/media'
+    })
+    fastify.register(dishRoutes, {
+      prefix: '/dishes'
     })
 
     fastify.register(testRoutes, {
