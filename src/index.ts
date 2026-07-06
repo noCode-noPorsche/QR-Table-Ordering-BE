@@ -1,21 +1,23 @@
-import Fastify from 'fastify'
-import cors from '@fastify/cors'
-import path from 'path'
 import envConfig, { API_URL } from '@/config'
+import { initOwnerAccount } from '@/controllers/account.controller'
+import autoRemoveRefreshTokenJob from '@/jobs/autoRemoveRefreshToken'
+import { errorHandlerPlugin } from '@/plugins/errorHandler.plugins'
+import validatorCompilerPlugin from '@/plugins/validatorCompiler.plugins'
+import accountRoutes from '@/routes/account.route'
+import authRoutes from '@/routes/auth.route'
+import dishRoutes from '@/routes/dish.route'
+import guestRoutes from '@/routes/guest.route'
+import mediaRoutes from '@/routes/media.route'
+import staticRoutes from '@/routes/static.route'
+import tablesRoutes from '@/routes/table.route'
+import testRoutes from '@/routes/test.route'
 import { createFolder } from '@/utils/helpers'
 import fastifyAuth from '@fastify/auth'
-import fastifyHelmet from '@fastify/helmet'
 import fastifyCookie from '@fastify/cookie'
-import authRoutes from '@/routes/auth.route'
-import validatorCompilerPlugin from '@/plugins/validatorCompiler.plugins'
-import { errorHandlerPlugin } from '@/plugins/errorHandler.plugins'
-import testRoutes from '@/routes/test.route'
-import { hashPassword } from '@/utils/crypto'
-import accountRoutes from '@/routes/account.route'
-import { initOwnerAccount } from '@/controllers/account.controller'
-import mediaRoutes from '@/routes/media.route'
-import dishRoutes from '@/routes/dish.route'
-import tablesRoutes from '@/routes/table.route'
+import cors from '@fastify/cors'
+import fastifyHelmet from '@fastify/helmet'
+import Fastify from 'fastify'
+import path from 'path'
 
 const fastify = Fastify({
   logger: false
@@ -24,11 +26,12 @@ const fastify = Fastify({
 const startServer = async () => {
   try {
     createFolder(path.resolve(envConfig.UPLOAD_FOLDER))
-
+    autoRemoveRefreshTokenJob()
     const whitelist = ['*']
     fastify.register(cors, {
       origin: whitelist, // Cho phép tất cả các domain gọi API
-      credentials: true // Cho phép trình duyệt gửi cookie đến server
+      credentials: true, // Cho phép trình duyệt gửi cookie đến server
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] // Cho phép các phương thức HTTP
     })
 
     fastify.register(fastifyAuth, {
@@ -58,11 +61,17 @@ const startServer = async () => {
     fastify.register(mediaRoutes, {
       prefix: '/media'
     })
+    fastify.register(staticRoutes, {
+      prefix: '/static'
+    })
     fastify.register(dishRoutes, {
       prefix: '/dishes'
     })
     fastify.register(tablesRoutes, {
       prefix: '/tables'
+    })
+    fastify.register(guestRoutes, {
+      prefix: '/guest'
     })
 
     fastify.register(testRoutes, {

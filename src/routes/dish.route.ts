@@ -50,7 +50,7 @@ export default async function dishRoutes(fastify: FastifyInstance, options: Fast
     Reply: GetDishListWithPaginationResType
     Querystring: GetDishListWithPaginationQueryType
   }>(
-    '/pagination',
+    '/',
     {
       schema: {
         response: {
