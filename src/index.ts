@@ -2,12 +2,14 @@ import envConfig, { API_URL } from '@/config'
 import { initOwnerAccount } from '@/controllers/account.controller'
 import autoRemoveRefreshTokenJob from '@/jobs/autoRemoveRefreshToken'
 import { errorHandlerPlugin } from '@/plugins/errorHandler.plugins'
+import { socketPlugin } from '@/plugins/socket.plugins'
 import validatorCompilerPlugin from '@/plugins/validatorCompiler.plugins'
 import accountRoutes from '@/routes/account.route'
 import authRoutes from '@/routes/auth.route'
 import dishRoutes from '@/routes/dish.route'
 import guestRoutes from '@/routes/guest.route'
 import mediaRoutes from '@/routes/media.route'
+import orderRoutes from '@/routes/order.route'
 import staticRoutes from '@/routes/static.route'
 import tablesRoutes from '@/routes/table.route'
 import testRoutes from '@/routes/test.route'
@@ -17,6 +19,7 @@ import fastifyCookie from '@fastify/cookie'
 import cors from '@fastify/cors'
 import fastifyHelmet from '@fastify/helmet'
 import Fastify from 'fastify'
+import fastifySocketIO from 'fastify-socket.io'
 import path from 'path'
 
 const fastify = Fastify({
@@ -45,12 +48,12 @@ const startServer = async () => {
     fastify.register(fastifyCookie)
     fastify.register(validatorCompilerPlugin)
     fastify.register(errorHandlerPlugin)
-    // fastify.register(fastifySocketIO, {
-    //   cors: {
-    //     origin: envConfig.CLIENT_URL
-    //   }
-    // })
-    // fastify.register(socketPlugin)
+    fastify.register(fastifySocketIO, {
+      cors: {
+        origin: envConfig.CLIENT_URL
+      }
+    })
+    fastify.register(socketPlugin)
 
     fastify.register(authRoutes, {
       prefix: '/auth'
@@ -72,6 +75,9 @@ const startServer = async () => {
     })
     fastify.register(guestRoutes, {
       prefix: '/guest'
+    })
+    fastify.register(orderRoutes, {
+      prefix: '/orders'
     })
 
     fastify.register(testRoutes, {
