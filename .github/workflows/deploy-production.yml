@@ -2,9 +2,9 @@ name: Deploy Production
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
 
 jobs:
   build:
@@ -15,10 +15,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 26.3.1
-          cache: 'npm'
+          cache: "npm"
       - name: Create .env file
         run: echo "${{secrets.ENV_PRODUCTION}}" > .env
       - run: npm i --force
+      - run: npm prisma generate
       - run: npm run build
   deploy:
     runs-on: ubuntu-latest
