@@ -19,7 +19,7 @@ jobs:
       - name: Create .env file
         run: echo "${{secrets.ENV_PRODUCTION}}" > .env
       - run: npm i --force
-      - run: npm prisma generate
+      - run: npx prisma generate
       - run: npm run build
   deploy:
     runs-on: ubuntu-latest
