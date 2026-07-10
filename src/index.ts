@@ -35,7 +35,7 @@ const startServer = async () => {
     fastify.register(cors, {
       origin: whitelist, // Cho phép tất cả các domain gọi API
       credentials: true, // Cho phép trình duyệt gửi cookie đến server
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] // Cho phép các phương thức HTTP
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
     })
 
     fastify.register(fastifyAuth, {
